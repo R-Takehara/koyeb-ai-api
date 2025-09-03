@@ -4,7 +4,6 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
 app = FastAPI()
 
-# 軽量モデルに変更
 MODEL_NAME = "rinna/japanese-gpt-small"
 
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, cache_dir="/tmp")
@@ -17,10 +16,7 @@ class TextRequest(BaseModel):
 
 @app.post("/summarize")
 def summarize(request: TextRequest):
-    result = summarizer(
-        request.text,
-        max_length=100,   # 出力の長さを制限
-        do_sample=False   # サンプリングせず決定的に生成
-    )
+    result = summarizer(request.text, max_length=100, do_sample=False)
     return {"summary": result[0]["generated_text"]}
+
 
